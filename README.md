@@ -392,9 +392,10 @@ First thing to do on your machine: `make docker-run`, and check the Actions tab 
 
 ## Author
 
-**Your Name** – Data / Cloud Engineering student
+Bilal CHAOUI  – Computer Science Engineering student
 
-- GitHub: [github.com/YOUR_GITHUB_USERNAME](https://github.com/YOUR_GITHUB_USERNAME)
-- LinkedIn: [linkedin.com/in/YOUR_LINKEDIN_PROFILE](https://www.linkedin.com/in/YOUR_LINKEDIN_PROFILE)
+- GitHub: [github.com/LILIBE-art](https://github.com/LILBE-art)
+- LinkedIn: [linkedin.com/in/Bilal CHAOUI](https://www.linkedin.com/in/bilal-chaoui-491707228)
+
 
 Released under the [MIT License](LICENSE).
