@@ -1,0 +1,6 @@
+# Development and CI dependencies
+-r requirements.txt
+pytest==9.1.1
+ruff==0.17.1
+moto[s3]==5.2.4
+PyYAML==6.0.3

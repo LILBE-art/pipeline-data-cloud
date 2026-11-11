@@ -1,0 +1,6 @@
+# Runtime dependencies (versions verified together on Python 3.12)
+pandas==3.0.6
+numpy==2.5.4
+psycopg2-binary==2.9.13
+boto3==1.43.114
+python-dotenv==1.2.4

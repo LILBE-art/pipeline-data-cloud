@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+build/
+dist/
+
+# Tooling caches
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Secrets and local configuration (only .env.example is versioned)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.aws/
+credentials
+
+# Generated data (reproducible with `make run`) - keep only the data README
+data/*
+!data/README.md
+
+# Logs
+logs/
+*.log
+
+# Power BI files embed a copy of the data: add them explicitly (git add -f) only if intended
+*.pbix
+*.pbit
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store

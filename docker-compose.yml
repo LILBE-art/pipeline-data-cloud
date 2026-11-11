@@ -1,0 +1,57 @@
+# PostgreSQL + pipeline.  Required: POSTGRES_PASSWORD (set it in .env).
+#
+#   docker compose up -d db          # start PostgreSQL only (healthcheck + volume)
+#   docker compose run --rm app      # run the pipeline against it
+#   docker compose down              # stop (data kept in the pgdata volume)
+#   docker compose down -v           # stop AND delete the database volume
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: pipeline-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-ecommerce}
+      POSTGRES_USER: ${POSTGRES_USER:-pipeline}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env (see .env.example)}
+    ports:
+      # Bound to localhost only: the database is not exposed on the network.
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # Executed only when the volume is created; the pipeline re-applies them (idempotent).
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - ./sql/analytics.sql:/docker-entrypoint-initdb.d/02_analytics.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+    restart: unless-stopped
+
+  app:
+    build: .
+    image: pipeline-data-cloud:latest
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      LOAD_TO_POSTGRES: "true"
+      POSTGRES_HOST: db
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: ${POSTGRES_DB:-ecommerce}
+      POSTGRES_USER: ${POSTGRES_USER:-pipeline}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env (see .env.example)}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      RANDOM_SEED: ${RANDOM_SEED:-42}
+      NUM_ORDERS: ${NUM_ORDERS:-5000}
+      S3_ENABLED: "false"
+    # Match the host user so files written to ./data belong to you, not to root.
+    user: "${UID:-1000}:${GID:-1000}"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    restart: "no"
+
+volumes:
+  pgdata:

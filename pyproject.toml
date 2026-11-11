@@ -1,0 +1,25 @@
+[project]
+name = "pipeline-data-cloud"
+version = "1.0.0"
+description = "E-commerce ETL pipeline: Bronze/Silver/Gold, PostgreSQL, optional AWS S3, BI-ready outputs"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "N", "C4"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["B011"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = [
+    "integration: needs a PostgreSQL server (TEST_POSTGRES_* variables); skipped otherwise",
+]
